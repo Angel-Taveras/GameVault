@@ -19,7 +19,8 @@ FROM openjdk:23-jdk AS runner
 WORKDIR /app
 
 # Copiamos el JAR construido desde el builder
-COPY --from=builder /app/target/*.jar app.jar
+COPY --from=builder /app/target/Game-0.0.1-SNAPSHOT.jar app.jar
+
 
 # Exponemos el puerto en el que corre Spring Boot
 EXPOSE 8080
