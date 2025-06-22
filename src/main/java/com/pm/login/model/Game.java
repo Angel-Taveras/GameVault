@@ -4,10 +4,8 @@ import com.pm.login.Enum.OwnershipStatus;
 import com.pm.login.Enum.Platform;
 import com.pm.login.Enum.PlayStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.util.UUID;
 
 @Entity
@@ -16,6 +14,8 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Game {
 
     @Id

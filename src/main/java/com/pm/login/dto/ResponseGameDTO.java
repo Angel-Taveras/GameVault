@@ -4,18 +4,16 @@ package com.pm.login.dto;
 import com.pm.login.Enum.OwnershipStatus;
 import com.pm.login.Enum.Platform;
 import com.pm.login.Enum.PlayStatus;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDate;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
+@Setter
 public class ResponseGameDTO {
 
     private UUID id;
