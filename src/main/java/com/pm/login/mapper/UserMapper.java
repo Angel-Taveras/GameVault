@@ -3,7 +3,6 @@ package com.pm.login.mapper;
 import com.pm.login.dto.RequestDTO;
 import com.pm.login.dto.ResponseDTO;
 import com.pm.login.model.Usuario;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 public class UserMapper {
 
