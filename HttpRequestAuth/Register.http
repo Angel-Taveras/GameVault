@@ -1,0 +1,9 @@
+### Registro de usuario
+POST http://localhost:8080/api/users/register
+Content-Type: application/json
+
+{
+  "nombre": "OtroUsuario",
+  "email": "nuevo@gamevault.com",
+  "password": "123456"
+}

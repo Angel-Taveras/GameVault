@@ -1,0 +1,4 @@
+### Obtener un juego por ID
+GET http://localhost:8080/api/games/5dcc1c7f-5032-4566-a42f-ae73f4734ab0
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdhbWV2YXVsdC5jb20iLCJpYXQiOjE3NTA0MTcwNTMsImV4cCI6MTc1MDQ1MzA1M30.MXgTkhldf1XFZ2Elh6V0kzQqv9WH-Gw6HZbVlqgOaqU
+Accept: application/json

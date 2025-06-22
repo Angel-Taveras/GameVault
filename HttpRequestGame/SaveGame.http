@@ -1,0 +1,13 @@
+POST http://localhost:8080/api/games
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdhbWV2YXVsdC5jb20iLCJpYXQiOjE3NTA0MTcwNTMsImV4cCI6MTc1MDQ1MzA1M30.MXgTkhldf1XFZ2Elh6V0kzQqv9WH-Gw6HZbVlqgOaqU
+Content-Type: application/json
+
+{
+  "name": "Hollow Knight",
+  "description": "An action-adventure game",
+  "platform": "PC",
+  "releaseYear": 2017,
+  "status": "OWNED",
+  "playStatus": "NOT_PLAYED",
+  "coverImageUrl": "https://example.com/hollowknight.jpg"
+}

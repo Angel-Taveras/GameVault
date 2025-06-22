@@ -1,0 +1,7 @@
+### GET request to example server
+GET http://localhost:8080/api/games
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0QGdhbWV2YXVsdC5jb20iLCJpYXQiOjE3NTA0NjExNjcsImV4cCI6MTc1MDQ5NzE2N30.Q4O2oBK113nQi4GvLM66x2ekt7uQXuAUqdsV_2duAYM
+Accept: application/json
+
+
+###
