@@ -14,15 +14,16 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 # Etapa 2: Runtime
-FROM openjdk:23-jdk AS runner
+# CAMBIO AQUÍ: Usamos eclipse-temurin que sí tiene versión 23
+FROM eclipse-temurin:23-jre AS runner
 
 WORKDIR /app
 
 # Copiamos el JAR construido desde el builder
+# Asegúrate de que el nombre del JAR coincida con el generado en el pom.xml
 COPY --from=builder /app/target/Game-0.0.1-SNAPSHOT.jar app.jar
 
-
-# Exponemos el puerto en el que corre Spring Boot
+# Exponemos el puerto
 EXPOSE 8080
 
 # Comando de arranque
