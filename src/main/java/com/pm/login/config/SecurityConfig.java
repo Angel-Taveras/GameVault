@@ -47,17 +47,32 @@ public class SecurityConfig {
                 .build();
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("https://gamevault8.netlify.app")); // SOLO ESTE dominio
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(true); // ES CLAVE QUE SEA TRUE
+   @Bean
+public CorsConfigurationSource corsConfigurationSource() {
+    CorsConfiguration config = new CorsConfiguration();
+    
+    // 1. Definimos los orígenes permitidos con y sin barra diagonal
+    config.setAllowedOrigins(List.of(
+        "https://gamevault8.netlify.app",
+        "https://gamevault8.netlify.app/"
+    ));
+    
+    // 2. Permitimos todos los métodos necesarios, incluyendo OPTIONS para el pre-vuelo
+    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+    
+    // 3. Definimos qué cabeceras aceptamos del Frontend
+    config.setAllowedHeaders(List.of("Authorization", "Cache-Control", "Content-Type"));
+    
+    // 4. Permitimos el envío de credenciales (cookies, auth headers)
+    config.setAllowCredentials(true);
+    
+    // 5. Tiempo en que el navegador guardará esta configuración (1 hora)
+    config.setMaxAge(3600L);
 
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-        return source;
-    }
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+    return source;
+}
+    
 
 }
