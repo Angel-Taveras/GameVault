@@ -14,12 +14,23 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-
+    
     private final JwtUtil jwtUtil;
     private final CustomUserDetailsService userDetailsService;
+
+    // Lista de rutas públicas que NO requieren JWT
+    private static final List<String> PUBLIC_PATHS = Arrays.asList(
+        "/api/users/register",
+        "/api/users/login",
+        "/swagger-ui",
+        "/v3/api-docs",
+        "/swagger-ui.html"
+    );
 
     public JwtFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
         this.jwtUtil = jwtUtil;
@@ -31,28 +42,44 @@ public class JwtFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain)
             throws ServletException, IOException {
+        
+        String requestPath = request.getRequestURI();
+        
+        // Si es una ruta pública, saltamos la validación del JWT
+        if (isPublicPath(requestPath)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         final String authHeader = request.getHeader("Authorization");
-
         String token = null;
         String email = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            try {
-                email = jwtUtil.extractUsername(token);
-            } catch (ExpiredJwtException e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado");
-                return;
-            } catch (Exception e) {
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
-                return;
-            }
+        // Si no hay header Authorization en rutas protegidas
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        token = authHeader.substring(7);
+        
+        try {
+            email = jwtUtil.extractUsername(token);
+        } catch (ExpiredJwtException e) {
+            System.err.println("Token expirado: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\":\"Token expirado\"}");
+            return;
+        } catch (Exception e) {
+            System.err.println("Token inválido: " + e.getMessage());
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.getWriter().write("{\"error\":\"Token inválido\"}");
+            return;
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
+            
             if (jwtUtil.validateToken(token, userDetails.getUsername())) {
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(
@@ -60,12 +87,27 @@ public class JwtFilter extends OncePerRequestFilter {
                                 null,
                                 userDetails.getAuthorities()
                         );
-
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * Verifica si la ruta actual es pública (no requiere autenticación)
+     */
+    private boolean isPublicPath(String requestPath) {
+        return PUBLIC_PATHS.stream().anyMatch(requestPath::startsWith);
+    }
+
+    /**
+     * Opcionalmente, podemos sobrescribir shouldNotFilter para mayor claridad
+     */
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getRequestURI();
+        return isPublicPath(path);
     }
 }
